@@ -76,5 +76,6 @@ export function compare(a, b, threshold = 0.8) {
   console.log({ dtwDist, corr, energyRatio });
 
   // Both metrics must agree
-  return dtwDist < threshold && corr > 0.6;
+  //return dtwDist < threshold && corr > 0.6;
+  return corr > 0.85;
 }
