@@ -1,5 +1,5 @@
 import { WebSocketServer } from 'ws';
-import { compare } from "./compare";
+import { compare } from "./compare.js";
 
 // Create web sockets registry
 const sessions = new Map();
