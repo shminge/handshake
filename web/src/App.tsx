@@ -8,7 +8,7 @@ const WS_URL = "ws://127.0.0.1:1234"
 function App() {
   
 
-  const [connected, setConnected] = useState(true);
+  const [connected, setConnected] = useState(false);
 
 
 
