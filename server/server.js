@@ -19,9 +19,9 @@ function purge() {
     }
 }
 
-function findMatch(incomingSignal) {
+function findMatch(pid, incomingSignal) {
     for (const [id, entry] of pending) {
-        if (compare(entry.signal, incomingSignal)) return id;
+        if (id != pid && compare(entry.signal, incomingSignal)) return id;
     }
     return null;
 }
@@ -73,7 +73,7 @@ wss.on("connection", (socket) => {
                     return;
                 }
 
-                const matchId = findMatch(signal);
+                const matchId = findMatch(id, signal);
 
                 if (matchId == null) {
                     pending.set(id, {
