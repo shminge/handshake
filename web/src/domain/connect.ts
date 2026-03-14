@@ -2,14 +2,17 @@ export type PacketData = ICECandidacy | STPAnswer | HandshakeData
 
 export type ICECandidacy = {
     address: string;
+    type: "ice-candidate"
 }
 
 export type STPAnswer = {
     address: string;
+    type: "stp-answer"
 }
 
 export type HandshakeData = {
     mag: number[];
+    type: "handshake-data"
 }
 
 

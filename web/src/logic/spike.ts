@@ -10,6 +10,7 @@ export type Snippet = Sample[]
 export function snippetToPacketData(s: Snippet): HandshakeData {
     const mags = s.map(sample => sample.magnitude);
     return {
+        type: "handshake-data",
         mag: mags,
     }
 }
