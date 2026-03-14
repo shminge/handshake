@@ -3,7 +3,7 @@ import { startMotion } from "../logic/motion";
 import { makeSnippetDetector, snippetToPacketData } from "../logic/spike";
 import { sendPacket, connect, type PacketData } from "../domain/connect";
 
-const WS_URL = "https://handshake-3y3j.onrender.com";
+const WS_URL = "https://handshake-iv6dtq.fly.dev";
 //"ws://127.0.0.1:1234";
 
 export default function Pending() {
@@ -37,10 +37,13 @@ export default function Pending() {
             });
             setEnabled(true);
         } catch (err) {
-            const msg = err instanceof Error
-                ? err.message
-                : JSON.stringify(err, Object.getOwnPropertyNames(err));
-            alert("Failed to connect or start motion: " + msg);
+            const msg = [
+                "type: " + typeof err,
+                "constructor: " + (err as any)?.constructor?.name,
+                "message: " + (err as any)?.message,
+                "raw: " + String(err),
+            ].join("\n");
+            alert(msg);
         } finally {
             setConnecting(false);
         }
@@ -53,7 +56,7 @@ export default function Pending() {
                     ? "Motion Enabled"
                     : connecting
                         ? "Connecting..."
-                        : "Start Motion"}
+                        : "Start the Motion"}
             </button>
         </div>
     );
