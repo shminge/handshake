@@ -3,15 +3,12 @@ import { startMotion } from "../logic/motion.ts"
 import { makeApexDetector, type Spike } from "../logic/spike.ts"
 
 export default function Pending() {
-
     const [enabled, setEnabled] = useState(false)
     const [spikes, setSpikes] = useState<Spike[]>([])
 
-    const apexDetector = makeApexDetector(8)
-
     const handleStart = async () => {
-
         try {
+            const apexDetector = makeApexDetector(12)
 
             await startMotion(({ x, y, z }) => {
                 const spike = apexDetector(x, y, z)
@@ -19,7 +16,6 @@ export default function Pending() {
             })
 
             setEnabled(true)
-
         } catch (err) {
             alert(err)
         }
@@ -27,7 +23,6 @@ export default function Pending() {
 
     return (
         <div>
-
             <button onClick={handleStart} disabled={enabled}>
                 {enabled ? "Motion Enabled" : "Start Motion"}
             </button>
@@ -35,11 +30,10 @@ export default function Pending() {
             <ul>
                 {spikes.map((s, i) => (
                     <li key={i}>
-                        {s.magnitude.toFixed(2)} @ {s.time}
+                        {s.time} — {s.magnitude.toFixed(2)}
                     </li>
                 ))}
             </ul>
-
         </div>
     )
 }

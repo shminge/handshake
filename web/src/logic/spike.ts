@@ -1,5 +1,5 @@
 export type Spike = {
-    time: number
+    time: string        // formatted HH:MM:SS.ms
     magnitude: number
     x: number
     y: number
@@ -10,40 +10,52 @@ type Sample = {
     x: number
     y: number
     z: number
-    time: number
+    timestamp: number
 }
 
 export function makeApexDetector(threshold: number) {
     const buffer: Sample[] = []
 
+    const formatTime = (ts: number) => {
+        const d = new Date(ts)
+        const ms = String(d.getMilliseconds()).padStart(3, "0")
+        const s = String(d.getSeconds()).padStart(2, "0")
+        const m = String(d.getMinutes()).padStart(2, "0")
+        const h = String(d.getHours()).padStart(2, "0")
+        return `${h}:${m}:${s}.${ms}`
+    }
+
     return function detectApex(x: number, y: number, z: number): Spike | null {
         const now = Date.now()
-        const sample: Sample = { x, y, z, time: now }
-        buffer.push(sample)
+        buffer.push({ x, y, z, timestamp: now })
 
-        // Only process once we have 3 samples
-        if (buffer.length < 3) return null
+        // Only start checking when we have 5 samples
+        if (buffer.length < 5) return null
 
-        const [a, b, c] = buffer
-
-        // Magnitudes
-        const magA = Math.sqrt(a.x*a.x + a.y*a.y + a.z*a.z)
-        const magB = Math.sqrt(b.x*b.x + b.y*b.y + b.z*b.z)
-        const magC = Math.sqrt(c.x*c.x + c.y*c.y + c.z*c.z)
+        // Middle sample is the candidate apex
+        const candidate = buffer[2]
+        const mags = buffer.map(s => Math.sqrt(s.x*s.x + s.y*s.y + s.z*s.z))
+        const mag = mags[2]
 
         let spike: Spike | null = null
 
-        if (magB > threshold && magB > magA && magB > magC) {
+        // Candidate is above threshold and greater than neighbors
+        if (mag > threshold &&
+            mag > mags[0] &&
+            mag > mags[1] &&
+            mag > mags[3] &&
+            mag > mags[4]
+        ) {
             spike = {
-                time: b.time,
-                magnitude: magB,
-                x: b.x,
-                y: b.y,
-                z: b.z
+                time: formatTime(candidate.timestamp),
+                magnitude: mag,
+                x: candidate.x,
+                y: candidate.y,
+                z: candidate.z
             }
         }
 
-        // Remove the oldest sample so we can slide
+        // Slide the window
         buffer.shift()
 
         return spike
