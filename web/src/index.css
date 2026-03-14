@@ -30,6 +30,14 @@
   }
 }
 
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  background: radial-gradient(#ffffff, #dddddd);
+}
+
 
 #root {
   width: 1126px;

@@ -2,4 +2,28 @@
 
 .logo {
     height: 48px;
+    filter: drop-shadow(0px 0px 10px rgb(0 0 30 / 0.2));
 }
+
+.floating {
+            width: 100px;
+            height: 100px;
+            background-color: lightblue;
+            border-radius: 50%;
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+
+            100% {
+                transform: translateY(0);
+            }
+        }
