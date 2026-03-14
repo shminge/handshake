@@ -10,8 +10,6 @@ const connections = new Map();
 const PURGE_TIME = 3_000;
 const pending = new Map();
 
-setInterval(purge, PURGE_TIME);
-
 function purge() {
     const cutoff = Date.now() - PURGE_TIME;
     for (const [id, entry] of pending) {
@@ -66,6 +64,8 @@ wss.on("connection", (socket) => {
 
         switch (msg.type) {
             case "handshake-data": {
+                purge();
+
                 const signal = msg.mag;
 
                 if (signal == null) {
