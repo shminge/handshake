@@ -1,6 +1,6 @@
 /* ─── Layout ─────────────────────────────────────────────── */
 .page {
-  min-height: 100svh;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
