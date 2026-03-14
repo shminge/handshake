@@ -6,6 +6,8 @@ export type PacketData = {
     id: string;
 };
 
+
+export type PacketHandler = (data: PacketData) => void;
 let socket: WebSocket | null = null;
 const listeners = new Set<(data: PacketData) => void>();
 
@@ -59,7 +61,11 @@ export function sendPacket(data: PacketData): void {
     socket.send(JSON.stringify(data));
 }
 
-export function addListener(fn: (data: PacketData) => void): () => void {
+export function addListener(fn: PacketHandler): () => void {
     listeners.add(fn);
     return () => listeners.delete(fn);
+}
+
+export function handlePacket(data: PacketData) {
+    listeners.forEach(fn => fn(data));
 }
