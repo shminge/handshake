@@ -1,6 +1,9 @@
 
-type PacketData = {};
+export type PacketData = {};
 let socket: WebSocket | null = null;
+export type PacketHandler = (data: PacketData) => void;
+const listeners = new Set<PacketHandler>();
+
 
 export function connect(url: string): void {
     if (socket?.readyState === WebSocket.OPEN) return;
@@ -16,6 +19,13 @@ export function connect(url: string): void {
     };
 }
 
+export function disconnect(): void {
+    socket?.close();
+    socket = null;
+}
+
+
+
 export function sendPacket(data: PacketData): void {
     if (!socket || socket.readyState !== WebSocket.OPEN) {
         console.warn("WebSocket is not connected");
@@ -24,6 +34,11 @@ export function sendPacket(data: PacketData): void {
     socket.send(JSON.stringify(data));
 }
 
-function handlePacket(data: PacketData): void {
-    // handle incoming packets
+export function addListener(fn: PacketHandler): () => void {
+    listeners.add(fn);
+    return () => listeners.delete(fn);
+}
+
+function handlePacket(data: PacketData) {
+    listeners.forEach(fn => fn(data));
 }
