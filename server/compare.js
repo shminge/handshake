@@ -22,25 +22,11 @@ export function compare(a, b, threshold = 0.75) {
   };
 
   // Determine input format and extract per-axis signals + magnitude
-  let signalsA, signalsB;
+  const magA = a.map(s => Math.sqrt(s.x ** 2 + s.y ** 2 + s.z ** 2));
+  const magB = b.map(s => Math.sqrt(s.x ** 2 + s.y ** 2 + s.z ** 2));
+  const signalsA = [magA, ...['x', 'y', 'z'].map(k => a.map(s => s[k]))];
+  const signalsB = [magB, ...['x', 'y', 'z'].map(k => b.map(s => s[k]))];
 
-  if (a[0] && typeof a[0] === 'object' && !Array.isArray(a[0])) {
-    // {x, y, z}[] format
-    const magA = a.map(s => Math.sqrt(s.x ** 2 + s.y ** 2 + s.z ** 2));
-    const magB = b.map(s => Math.sqrt(s.x ** 2 + s.y ** 2 + s.z ** 2));
-    signalsA = [magA, ...['x', 'y', 'z'].map(k => a.map(s => s[k]))];
-    signalsB = [magB, ...['x', 'y', 'z'].map(k => b.map(s => s[k]))];
-  } else if (Array.isArray(a[0])) {
-    // [[x,y,z]] format
-    const magA = a.map(([x, y, z]) => Math.sqrt(x ** 2 + y ** 2 + z ** 2));
-    const magB = b.map(([x, y, z]) => Math.sqrt(x ** 2 + y ** 2 + z ** 2));
-    signalsA = [magA, ...[0, 1, 2].map(i => a.map(s => s[i]))];
-    signalsB = [magB, ...[0, 1, 2].map(i => b.map(s => s[i]))];
-  } else {
-    // flat magnitude array (legacy)
-    signalsA = [a];
-    signalsB = [b];
-  }
 
   // Resample → z-score → |pearson| for each signal, take the max
   const TARGET_LEN = 64;

@@ -2,7 +2,6 @@ import { addListener, sendPacket } from './connect';
 
 // STUN for direct connections + TURN for mobile CGNAT relay.
 // openrelay.metered.ca is a free public TURN service for development.
-// For production, replace with your own coturn/TURN credentials.
 const ICE_SERVERS = [
     { urls: 'stun:stun.l.google.com:19302' },
     { urls: 'stun:stun1.l.google.com:19302' },
@@ -82,6 +81,7 @@ export function setupWebRTC(role: 'offerer' | 'answerer'): Promise<RTCDataChanne
             }
         };
 
+        // eslint-disable-next-line
         const cleanup = addListener(async (msg: any) => {
             try {
                 if (msg.type === 'sdp-offer' && role === 'answerer') {

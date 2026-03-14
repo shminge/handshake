@@ -28,6 +28,7 @@ export default function Pending({ onConnected }: { onConnected: (ch: RTCDataChan
         setPhase(p);
     };
 
+    // eslint-disable-next-line
     usePacketListener(async (msg: any) => {
         if (msg.type === 'waiting' && phaseRef.current === 'ready') {
             updatePhase('waiting');
@@ -46,6 +47,8 @@ export default function Pending({ onConnected }: { onConnected: (ch: RTCDataChan
     const handleStart = async () => {
         updatePhase('starting');
         try {
+            // This bit is ugly because iOS needs user interaction to start sensors
+            // eslint-disable-next-line
             const DME = DeviceMotionEvent as any;
             if (typeof DME.requestPermission === "function") {
                 const permission = await DME.requestPermission();

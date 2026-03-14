@@ -19,7 +19,7 @@ export type ICECandidate = {
     type: "ice-candidate"
     candidate: RTCIceCandidateInit
 }
-
+// eslint-disable-next-line
 export type PacketHandler = (data: any) => void;
 let socket: WebSocket | null = null;
 const listeners = new Set<PacketHandler>();

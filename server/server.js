@@ -31,7 +31,7 @@ function send(socket, msg) {
 }
 
 // server setup
-const port = process.env.PORT || 3000;
+const port = 3000; // to match fly.io deployment
 
 const httpServer = http.createServer();
 
