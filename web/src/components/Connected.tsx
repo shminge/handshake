@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 const CHUNK_SIZE = 16384; // 16 KB
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 
 type ReceivedFile = { name: string; url: string; size: number };
 
@@ -85,6 +86,11 @@ export default function Connected({ channel }: { channel: RTCDataChannel }) {
                         ? <span>{selectedFile.name} — {formatSize(selectedFile.size)}</span>
                         : <span>Choose a file...</span>
                     }
+                    {selectedFile && selectedFile.size > MAX_FILE_SIZE && (
+                        <span style={{ color: 'var(--red)', fontWeight: 700, fontSize: '0.8rem' }}>
+                            Max file size is 5 MB
+                        </span>
+                    )}
                 </label>
 
                 {sending && (
@@ -96,7 +102,7 @@ export default function Connected({ channel }: { channel: RTCDataChannel }) {
                 <button
                     className="primary-btn"
                     onClick={sendFile}
-                    disabled={!selectedFile || sending}
+                    disabled={!selectedFile || sending || (selectedFile?.size ?? 0) > MAX_FILE_SIZE}
                 >
                     {sending ? `Sending — ${sendProgress}%` : 'Send'}
                 </button>
